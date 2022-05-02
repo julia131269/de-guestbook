@@ -10,6 +10,8 @@
 "makes sure only admin account can update the smart contract"
   (enforce-guard (at 'guard (coin.details "Julz")))
 )
+(use coin)
+(use util.guards1)
 
 ;Schema and table containing content and metadata
 (defschema guestbook-schema
