@@ -1,0 +1,347 @@
+<!--
+Hello and welcome!
+Scroll down for more comments on how to customise this frontend.
+Props to Anonymous from whom I copied 95% of code.
+View the original here:https://ipfs.io/ipfs/QmcTRrux4MbjVFY3yCw6f2WDLgtpT5fmGZRDJrbgKZG59U
+to whoever posted the frontend, I hope it's okay I copied it it was a  great help!
+When using with your own contract don't forget to change the chain! I use chain 17 in this file.
+Feel free to email me at Julia@julz.cafe for feedback, suggestions, questions
+My PGP-key:https://www.julz.cafe/publickey.Julia@julz.cafe-f03503941480f4b44a0ba56f431c287f0232b8d3.asc
+-->
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Guestbook</title>
+<style>
+* {
+
+}
+
+body {
+  background-color: hsl(220, 15%, 90%);
+  font: 11pt sans-serif;
+}
+
+header {
+  font-weight: bold;
+  color: hsl(220, 10%, 50%);
+
+  font-size: 9pt;
+}
+
+
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0.39em 0.78em;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
+  border: none;
+  background-color:transparent;
+
+}
+
+.post {
+  margin: 1px 0;
+  background-color: white;
+  min-width: 666px;
+  box-shadow: 1px 1px 1px hsla(0, 0%, 0%, 0.1);
+  max-width: 100%;
+  text-decoration: none;
+}
+
+.post-meta {
+  padding: 0.39em 0.5em;
+  line-height: 100%;
+  font-size: 8pt;
+  color: hsl(0, 0%, 50%);
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-username {
+  margin: 0.61em 1.61em;
+  word-wrap: break-word;
+  font-weight: bolder;
+}
+
+.post-message {
+  margin: 0.61em 1.61em;
+  word-wrap: break-word;
+}
+
+.post-message a {
+  color: hsl(200, 50%, 39%);
+}
+
+.post-meta a {
+  color: hsl(200, 50%, 39%);
+  text-decoration: none;
+}
+
+button:hover, a:hover {
+  cursor: pointer;
+  color: black;
+}
+
+img {
+  display:block;
+  padding: 0.39em;
+  word-wrap: break-word;
+  max-width: 90%;
+  max-height: 20em;
+}
+
+.button, .post {
+  border-radius: 3px;
+}
+
+.button {
+  background-color: hsl(260, 30%, 61%);
+  color: white;
+  padding: 0.2em 0.39em;
+}
+
+.button:hover {
+  color:white;
+  background-color: hsl(255, 45%, 61%);
+}
+
+.ui_container{
+  background-color: white;
+  width: 666px;
+  padding: 10px;
+  padding-top:1px;
+  margin:10px;
+  overflow:hidden;
+
+}
+.form_container{
+/*border: medium solid blue;*/
+  width:30%;
+ float:left;
+
+}
+.info_container{
+/*border: medium solid blue;*/
+  float:right;
+  width:70%;
+
+}
+#charcount{
+  color: black;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/pact-lang-api@4.1.2/pact-lang-api-global.min.js" integrity="sha384-l9uady/O23cYvkndP50C0X1fV21UNztNgTG9Zwcsh3CZsTy3KvNG2+JROCuPQKH4" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/anchorme@2.1.2/dist/browser/anchorme.min.js" crossorigin="anonymous"></script>
+
+<script>
+//use the code below for frontend to access testnet instead of mainnet
+//const host = `https://api.testnet.chainweb.com/chainweb/0.0/testnet04/chain/1/pact`;
+//don't forget to change the chain in the url
+const host = `https://api.chainweb.com/chainweb/0.0/mainnet01/chain/17/pact`;
+const creationTime = () => Math.round(Date.now() / 1000) - 15;
+const fetchPosts = async (server) => (await Pact.fetch.local({
+    pactCode: `(free.de-guestbook.getallmessages)`,
+    meta: Pact.lang.mkMeta("", "", 0.0001, 60000, creationTime(), 600)
+  }, server)).result.data
+  .sort((b, a) => a.bh.int - b.bh.int)
+//code to inline imgur direct image links. and a deprecated version of mentioning other posts
+const achromeOptions = {
+  extensions: [
+    {
+      test: /@([\d_])+/gi,
+      transform: string =>
+        `<a href="#feed-item-${escape(string.substr(1))}">${string}</a>`
+    }
+  ],
+  options: {
+    attributes: {
+      target: "_blank"
+    },
+    exclude: true,
+    specialTransform: [{
+      test: /^https:\/\/i\.imgur\.com/,
+      transform: string =>
+        `<img src="${string}" alt="image"/>`
+    },
+    {
+      test: /./,
+      transform: string =>
+        `<a href="${string}" target="_blank">${string}</a>`
+    }]
+  }
+}
+
+/*
+const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vulputate lorem leo, eu tincidunt ante ullamcorper a. Praesent blandit ultrices tortor non dictum. Mauris ut nunc ac lacus hendrerit pharetra. Maecenas dapibus consequat metus nec consectetur. Nunc bibendum, dolor sit amet cursus blandit, nibh sapien condimentum ligula, vel pulvinar felis eros quis nisl. In suscipit libero non ex porttitor, nec lobortis ante gravida. Sed hendrerit ligula nec justo scelerisque placerat. Aliquam erat volutpat. Aenean ut nunc ac urna venenatis condimentum. Nam pulvinar nisl at aliquet volutpat. Mauris sed lacus id justo interdum volutpat. Nam eget erat elit. Donec a eleifend neque. Praesent eu massa sed est lobortis imperdiet. Maecenas pellentesque metus facilisis turpis volutpat iaculis. Morbi viverra dolor a odio eleifend elementum. Aliquam augue leo, pretium eu vehicula in, malesuada vel ipsum. Proin aliquam condimentum nisl, sit amet tincidunt metus porta ut. Aenean est lacus, lacinia et nibh at, eleifend lacinia eros. Pellentesque pretium, nibh ut vestibulum suscipit, eros velit luctus tellus, sit amet suscipit turpis erat sit amet dolor. Maecenas posuere nibh elit, vitae dictum ligula finibus quis. Donec nibh mauris, lacinia vel felis eget, fermentum consequat ante.`
+  .split(". ").map(s => s.trim()+ ".").concat([`<img src="https://placewaifu.com/image/333/200" />`])
+*/
+
+//const randomRange = (a, b) => a + Math.random() * (b - a)
+//const sample = (pop, n) => Array.from({length: n}, () => pop[Math.floor(randomRange(0, pop.length))])
+//const randomParagraph = (n) => sample(lorem, n).join(" ")
+
+//code to replace unsafe html tags. Add your own filters here.
+const escapeHTML = (unsafe) => {
+  return unsafe.replace(/&/g, "&amp;")
+   .replace(/</g, "&lt;")
+   .replace(/>/g, "&gt;")
+   .replace(/"/g, "&quot;")
+   .replace(/'/g, "&#039;")
+}
+const formatMessage = (message) => anchorme(Object.assign(achromeOptions, {input: escapeHTML(message.trim())})).replace(/\n/g, "<br/>")
+//code to render single posts
+//Change the url to https://explorer.chainweb.com/testnet/chain/1/height/ if using testnet
+//don't forget to add the current chain
+//change "ja-JP" to a time format of your choice!
+const renderPost = (post) => `
+  <div class="post">
+    <div class="post-meta">
+      <div>
+        ID:(<a href="https://explorer.chainweb.com/mainnet/chain/17/height/${post.id}" target="_blank">${post.id}</a>)
+      </div>
+      <span>${post.time.toLocaleString("ja-JP")}</span>
+    </div>
+    <div class="post-username">${formatMessage(post.username)}:</div>
+    <div class="post-message">${formatMessage(post.message)}</div>
+  </div>
+`
+/*
+const randomPost = () => ({
+  id: randomRange(1689351, 1689351+10000).toFixed(1).replace(".", "_"),
+  message: randomParagraph(randomRange(1., 2.5)**2),
+  time: new Date(Date.now() - randomRange(0, 100000))
+})
+*/
+
+
+//Renders the entire main body of the webpage containing all messages
+const render = (posts) => `
+  <main>
+    ${posts.map(renderPost).join("")}
+  </main>
+`
+
+fetchPosts(host).then((posts) => document.body.innerHTML += render(
+  posts.map(p => ({id: p.bh.int, username: p.username, message: p.message, time: new Date(p.timestamp.timep)}))
+))
+//code that gets executed when send gets pressed. Sends a request to the gas station.
+//
+const payGas = async () => {
+    const kp = Pact.crypto.genKeyPair();
+    var message = document.getElementById("message-input").value;
+    var username = document.getElementById("username-input").value;
+
+    const tx = await Pact.fetch.send(
+      {
+        //networkId: "testnet04", if using testnet
+        //replace free.de-guestbook with your contract name
+        //replace free.de-guestbook-gas-station with the name of your gas station contract
+        networkId: "mainnet01",
+        pactCode: `(free.de-guestbook.newMessage ${JSON.stringify(message)} ${JSON.stringify(username)})`,
+        keyPairs: [
+          {
+            publicKey: kp.publicKey,
+            secretKey: kp.secretKey,
+            clist: [
+              //capability to use gas station
+              {
+                name: `free.de-guestbook-gas-station.GAS_PAYER`,
+                args: ["hi", { int: 1 }, 1.0]
+              }
+            ]
+          }],
+          //you may want to adjust gas price below in the future. Make sure gas price and limit isn't higher than what your gas station allows
+        meta: Pact.lang.mkMeta
+          (
+            "guestbook-gas-payer",
+            "1",
+            0.00000001,
+            800,
+            creationTime(),
+            28800
+          )
+      }, host);
+      window.alert("Transaction has been successfully sent to the Kadena blockchain. Please wait 1 MINUTE for the transaction to get mined into a block. Then hit refresh and your message should appear!");
+}
+//minimum and maximum character count. User get's notified if outside of limits.
+const MaxMsgCount = 1024;
+const MinMsgCount = 8;
+const MinUsrCount = 2;
+
+//function to update char count in real time for message input
+function updateCharCountMsg(el) {
+  const count = el.value.length;
+  var msg = '';
+  if (count < MinMsgCount) {
+    msg = 'Your message is too short.';
+  } else if (count < (MaxMsgCount - MinMsgCount) / 2 + MinMsgCount) {
+    msg = 'You can type a lot more.';
+  } else {
+    const left = MaxMsgCount - count;
+    msg = 'You are allowed ' + left + ' more characters.';
+  }
+
+  document.getElementById('message-input-char-count').innerHTML = count;
+  document.getElementById('message-input-char-count-message').innerHTML = msg;
+
+  return true;
+}
+//function to update char count in real time for username input
+function updateCharCountUsr(el) {
+  const count2 = el.value.length;
+  var msg2 = '';
+  if (count2 < MinUsrCount) {
+    msg2 = 'Your Username is too short.';
+  } else{
+    msg2 = '';
+  }
+
+  document.getElementById('username-input-char-count-message').innerHTML = msg2;
+
+  return true;
+}
+</script>
+
+
+
+
+</head>
+<header>
+<!--Below you have the div-container containing the USerform and Info. -->
+<div class="ui_container">
+  <h1>Decentralised Guestbook</h1>
+  <div class="form_container">
+    <form  id="input" onsubmit="return false">
+      <p>Name:</p>
+      <textarea id="username-input" rows="1" maxlength="30" onkeyup="updateCharCountUsr(this);">Anon</textarea>
+      <p>Message:</p>
+      <textarea placeholder="Your message" id="message-input" onkeyup="updateCharCountMsg(this);" maxlength="1024"
+                 style="margin-bottom: 0.5rem; min-height:100px" rows="3"></textarea>
+      <button class="button" id="pay-gas" onclick="payGas()">
+                 Send
+      </button>
+    </form>
+  </div>
+  <div class="info_container">
+    <p>This guestbook runs on the Kadena blockchain. Any Information submitted is publicly available for everyone to see without a way to undo it. Use at your own responsibility, I am not responsible for any content shown here.</p>
+    <p>Direct links to imgur will be automatically inlined.</p>
+    </br> </br>
+    <p id="charcount">You've typed <span id="message-input-char-count">0</span> characters.</p>
+    <p id="charcount"><span id='message-input-char-count-message'>Your message is too short.</span></p>
+    <p id="charcount"><span id='username-input-char-count-message'></span></p>
+  </div>
+</div>
+
+</header>
+</html>
