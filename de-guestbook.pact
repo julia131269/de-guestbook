@@ -1,6 +1,7 @@
 
 (namespace "free")
 ;(namespace "free")
+;change de-guestbook to a module name of your choice.
 (module de-guestbook GOVERNANCE
 "A smart contract to run a guestbook."
 
