@@ -262,10 +262,11 @@ const payGas = async () => {
             ]
           }],
           //you may want to adjust gas price below in the future. Make sure gas price and limit isn't higher than what your gas station allows
+          //change 17 to whatever chain you are using
         meta: Pact.lang.mkMeta
           (
             "guestbook-gas-payer",
-            "1",
+            "17",
             0.00000001,
             800,
             creationTime(),
