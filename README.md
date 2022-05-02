@@ -1,5 +1,6 @@
 # de-guestbook
-A guestbook written in PACT for the Kadena Blockchain
+### A guestbook(template) written in PACT for the Kadena Blockchain
+
 First of all a shoutout to https://github.com/Thanos420NoScope/Anon-Chat that inspired this project. 
 Most of the code is copied from anon-chat and https://ipfs.io/ipfs/QmcTRrux4MbjVFY3yCw6f2WDLgtpT5fmGZRDJrbgKZG59U by anon. I built on top of it to customize and learn.
 
