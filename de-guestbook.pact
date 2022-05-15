@@ -63,11 +63,9 @@
 ;Probably doesn't need to be used but just in case, people can be evil :(
   (defun updateTable(key:string name:string message:string)
     @doc "Update a message and username(ADMIN ONLY) Added for emergency purposes only"
-    (enforce-keyset GOVERNANCE)
-    (update history key {"username": name, "message": message })
+    (enforce-guard (at 'guard (coin.details "Julz")))
+    (update history key {"username": name, "message": (+ message "(edited)") })
   )
 )
 ;(create-table history)
 ;(create-table last-id)
-(create-table history)
-(create-table last-id)
