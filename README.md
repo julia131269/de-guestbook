@@ -13,6 +13,7 @@ Now all you need to do is open the html file or  upload it to your server and th
 ## Features:
 * Catching html injections and rendering them safely
 * Fully decentralised backend, storing messages on the Kadena Blockchain
+* edited messages if neccessary
 * Customisable locale for displaying Date and Time. Date and Time gets converted to viewers timezone
 * Ability for the contract uploader to change content of entries if needed
 * Direct links to imgur.com get automatically inlined
