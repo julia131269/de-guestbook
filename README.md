@@ -1,4 +1,4 @@
-# de-guestbook
+# de-guestbook V1.1
 ### A guestbook(template) written in PACT for the Kadena Blockchain
 
 First of all a shoutout to [github.com/Thanos420NoScope/Anon-Chat](https://github.com/Thanos420NoScope/Anon-Chat) that inspired this project. 
@@ -13,9 +13,8 @@ Now all you need to do is open the html file or  upload it to your server and th
 ## Features:
 * Catching html injections and rendering them safely
 * Fully decentralised backend, storing messages on the Kadena Blockchain
-* edited messages if neccessary
 * Customisable locale for displaying Date and Time. Date and Time gets converted to viewers timezone
-* Ability for the contract uploader to change content of entries if needed
+* Ability for the contract uploader to change content of entries if needed with a suffix added to notify Users the message has ben edited
 * Direct links to imgur.com get automatically inlined
 * Every post contains a link to the block containing the send call
 * No Copyright, feel free to do whatever you want to. No attribution required, sell it as your own project if you wish :)
