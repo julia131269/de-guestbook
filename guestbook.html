@@ -119,22 +119,22 @@ img {
 .ui_container{
   background-color: white;
   width: 666px;
-  padding: 10px;
-  padding-top:1px;
-  margin:10px;
-  overflow:hidden;
+  display: flex;
+  flex-flow: row wrap;
+   margin-bottom: 2px;
+   padding: 2px;
+}
+#heading{
 
 }
 .form_container{
-/*border: medium solid blue;*/
-  width:30%;
- float:left;
+  display_flex;
+  flex-direction: column wrap;
+  width: 400px;
 
 }
 .info_container{
-/*border: medium solid blue;*/
-  float:right;
-  width:70%;
+  width: 240px;
 
 }
 #charcount{
@@ -321,23 +321,23 @@ function updateCharCountUsr(el) {
 <header>
 <!--Below you have the div-container containing the USerform and Info. -->
 <div class="ui_container">
-  <h1>Decentralised Guestbook</h1>
+  <h1 id="heading">Decentralised Guestbook</h1>
+  <div style="width:300px ;"></div>
   <div class="form_container">
     <form  id="input" onsubmit="return false">
-      <p>Name:</p>
-      <textarea id="username-input" rows="1" maxlength="30" onkeyup="updateCharCountUsr(this);">Anon</textarea>
-      <p>Message:</p>
-      <textarea placeholder="Your message" id="message-input" onkeyup="updateCharCountMsg(this);" maxlength="1024"
-                 style="margin-bottom: 0.5rem; min-height:100px" rows="3"></textarea>
-      <button class="button" id="pay-gas" onclick="payGas()">
+      <div><p>Name:</p></div>
+      <div><textarea id="username-input" rows="1" maxlength="30" onkeyup="updateCharCountUsr(this);" style="resize: none;">Anon</textarea></div>
+      <div><p>Message:</p></div>
+      <div><textarea placeholder="Your message" id="message-input" onkeyup="updateCharCountMsg(this);" maxlength="1024"
+                 style="margin-bottom: 0.5rem; min-height:100px;resize: block; width:90%;" rows="3"></textarea></div>
+      <div><button class="button" id="pay-gas" onclick="payGas()">
                  Send
-      </button>
+      </button></div>
     </form>
   </div>
   <div class="info_container">
     <p>This guestbook runs on the Kadena blockchain. Any Information submitted is publicly available for everyone to see without a way to undo it. Use at your own responsibility, I am not responsible for any content shown here.</p>
     <p>Direct links to imgur will be automatically inlined.</p>
-    </br> </br>
     <p id="charcount">You've typed <span id="message-input-char-count">0</span> characters.</p>
     <p id="charcount"><span id='message-input-char-count-message'>Your message is too short.</span></p>
     <p id="charcount"><span id='username-input-char-count-message'></span></p>
