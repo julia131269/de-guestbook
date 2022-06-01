@@ -16,6 +16,7 @@ Now all you need to do is open the html file or  upload it to your server and th
 * Customisable locale for displaying Date and Time. Date and Time gets converted to viewers timezone
 * Ability for the contract uploader to change content of entries if needed with a suffix added to notify Users the message has ben edited
 * Direct links to imgur.com get automatically inlined
+* "4chan style" quotes of post get automatically linked
 * Every post contains a link to the block containing the send call
 * No Copyright, feel free to do whatever you want to. No attribution required, sell it as your own project if you wish :)
 * Made with love in Germany
