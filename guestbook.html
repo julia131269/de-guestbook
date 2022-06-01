@@ -168,7 +168,7 @@ const achromeOptions = {
     {
       test: /&gt;&gt;([\d])+/gi,
       transform: string =>
-          `<a href="#${string.substr(8)}">${string}</a>`
+          `<a href="#${string.substr(8)}" onclick="highlightDiv(${string.substr(8)});">${string}</a>`
     }
   ],
   options: {
@@ -335,6 +335,18 @@ function citeBlock(blockId) {
 
         updateCharCountMsg(textNode);
       }
+
+      function sleep(ms) {
+        return new Promise(
+          resolve => setTimeout(resolve, ms)
+        );
+      }
+
+async function highlightDiv(id){
+  document.getElementById(id).style.backgroundColor='hsl(220, 15%, 90%)';
+   await sleep(3000);
+  document.getElementById(id).style.backgroundColor='white';
+  }
 </script>
 
 
