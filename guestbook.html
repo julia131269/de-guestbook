@@ -162,12 +162,13 @@ const fetchPosts = async (server) => (await Pact.fetch.local({
   }, server)).result.data
   .sort((b, a) => a.bh.int - b.bh.int)
 //code to inline imgur direct image links. and a deprecated version of mentioning other posts
+//https://stackoverflow.com/questions/64965671/javascript-extract-strings-that-match-regex-from-text
 const achromeOptions = {
   extensions: [
     {
       test: /&gt;&gt;([\d])+/gi,
       transform: string =>
-        `<a href="#${string.substr(8)}">${string}</a>`
+          `<a href="#${string.substr(8)}">${string}</a>`
     }
   ],
   options: {
@@ -211,10 +212,11 @@ const formatMessage = (message) => anchorme(Object.assign(achromeOptions, {input
 //don't forget to add the current chain
 //change "ja-JP" to a time format of your choice!
 const renderPost = (post) => `
-  <div class="post">
+  <div class="post" id="${post.id}">
     <div class="post-meta">
       <div>
         ID:(<a href="https://explorer.chainweb.com/mainnet/chain/17/height/${post.id}" target="_blank">${post.id}</a>)
+
       </div>
       <span>${post.time.toLocaleString("ja-JP")}</span>
     </div>
@@ -222,6 +224,10 @@ const renderPost = (post) => `
     <div class="post-message">${formatMessage(post.message)}</div>
   </div>
 `
+
+
+
+
 /*
 const randomPost = () => ({
   id: randomRange(1689351, 1689351+10000).toFixed(1).replace(".", "_"),
