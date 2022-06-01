@@ -216,7 +216,7 @@ const renderPost = (post) => `
     <div class="post-meta">
       <div>
         ID:(<a href="https://explorer.chainweb.com/mainnet/chain/17/height/${post.id}" target="_blank">${post.id}</a>)
-
+        <a href="javascript:citeBlock(${post.id})">(↩)</a>
       </div>
       <span>${post.time.toLocaleString("ja-JP")}</span>
     </div>
@@ -324,6 +324,17 @@ function updateCharCountUsr(el) {
 
   return true;
 }
+
+function citeBlock(blockId) {
+        const textNode = document.getElementById('message-input');
+        const text = textNode.value;
+
+        if (text.length == 0) textNode.value += '>>' + blockId + ' \n';
+        else if (text[text.length - 1] == ' ') textNode.value += '>>' + blockId + ' \n';
+        else textNode.value += '>>' + blockId + ' \n';
+
+        updateCharCountMsg(textNode);
+      }
 </script>
 
 
