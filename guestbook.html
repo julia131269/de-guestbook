@@ -159,7 +159,7 @@ const host = `https://api.chainweb.com/chainweb/0.0/mainnet01/chain/17/pact`;
 const creationTime = () => Math.round(Date.now() / 1000) - 15;
 const fetchPosts = async (server) => (await Pact.fetch.local({
     pactCode: `(free.de-guestbook.getallmessages)`,
-    meta: Pact.lang.mkMeta("", "", 0.0001, 60000, creationTime(), 600)
+    meta: Pact.lang.mkMeta("", "", 0.0001, 100000, creationTime(), 600)
   }, server)).result.data
   .sort((b, a) => a.bh.int - b.bh.int)
 //code to inline imgur direct image links. and a deprecated version of mentioning other posts
@@ -281,7 +281,7 @@ const payGas = async () => {
             "guestbook-gas-payer",
             "17",
             0.00000001,
-            800,
+            5000,
             creationTime(),
             28800
           )
