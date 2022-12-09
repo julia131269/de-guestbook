@@ -32,7 +32,7 @@
     (enforce (= "(free.de-guestbook" (take 18 (at 0 (at "exec-code" (read-msg))))) "only de-guestbook token smart contract")
     ;enforce a gas price and limit. IF transactions fail you may have to increase it.
     (enforce-below-or-at-gas-price 0.00000001)
-    (enforce-below-or-at-gas-limit 800)
+    (enforce-below-or-at-gas-limit 5000)
     (compose-capability (ALLOW_GAS))
   )
 
