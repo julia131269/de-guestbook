@@ -45,6 +45,30 @@ main {
   background-color:transparent;
 
 }
+  
+.hidden{
+  display: none;
+}
+
+.failed{
+  background-color: hsl(360, 73%, 52%);
+  margin: 1px 0;
+  min-width: 666px;
+  box-shadow: 1px 1px 1px hsla(0, 0%, 0%, 0.1);
+  max-width: 50vw;
+  text-decoration: none;
+}
+
+.blinking {
+  animation: hue-change 3s infinite;
+}
+
+@keyframes hue-change {
+  0% { background-color: white; }
+  50% { background-color: hsl(34, 0%, 76%); }
+  100% { background-color: white; }
+  /*100% { background-color: hsl(34, 0%, 34%); }*/
+}
 
 .post {
   margin: 1px 0;
@@ -157,8 +181,9 @@ form, h1{
 //don't forget to change the chain in the url
 const host = `https://api.chainweb.com/chainweb/0.0/mainnet01/chain/17/pact`;
 const creationTime = () => Math.round(Date.now() / 1000) - 15;
+//change YOURGUESTBOOK to your contract name
 const fetchPosts = async (server) => (await Pact.fetch.local({
-    pactCode: `(free.de-guestbook.getallmessages)`,
+    pactCode: `(free.YOURGUESTBOOK.getallmessages)`,
     meta: Pact.lang.mkMeta("", "", 0.0001, 100000, creationTime(), 600)
   }, server)).result.data
   .sort((b, a) => a.bh.int - b.bh.int)
@@ -258,10 +283,10 @@ const payGas = async () => {
     const tx = await Pact.fetch.send(
       {
         //networkId: "testnet04", if using testnet
-        //replace free.de-guestbook with your contract name
-        //replace free.de-guestbook-gas-station with the name of your gas station contract
+        //replace free.YOURGUESTBOOK with your contract name
+        //replace free.YOURGUESTBOOK-gas-station with the name of your gas station contract
         networkId: "mainnet01",
-        pactCode: `(free.de-guestbook.newMessage ${JSON.stringify(message)} ${JSON.stringify(username)})`,
+        pactCode: `(free.YOURGUESTBOOK.newMessage ${JSON.stringify(message)} ${JSON.stringify(username)})`,
         keyPairs: [
           {
             publicKey: kp.publicKey,
@@ -269,7 +294,7 @@ const payGas = async () => {
             clist: [
               //capability to use gas station
               {
-                name: `free.de-guestbook-gas-station.GAS_PAYER`,
+                name: `free.YOURGUESTBOOK-gas-station.GAS_PAYER`,
                 args: ["hi", { int: 1 }, 1.0]
               }
             ]
@@ -286,7 +311,31 @@ const payGas = async () => {
             28800
           )
       }, host);
-      window.alert("Transaction has been successfully sent to the Kadena blockchain. Please wait 1 MINUTE for the transaction to get mined into a block. Then hit refresh and your message should appear!");
+      document.getElementById("newPost").classList.remove("hidden");
+        document.getElementById("newPost").classList.add("blinking");
+        document.getElementById("newPost-name").textContent = username;
+        document.getElementById("newPost-message").textContent = message;
+        document.getElementById("newPost-id").textContent = "PENDING";
+        document.getElementById("newPost-time").textContent = "Post submitted to the Kadena Blockchain, please wait";
+        try {
+          let hello = await Pact.fetch.listen({ "listen": tx.requestKeys[0] }, host);
+          if (hello.result.status !== "success") {
+            console.log(JSON.stringify(hello));
+            document.getElementById("newPost").classList.remove("blinking");
+            document.getElementById("newPost").classList.remove("post");
+            document.getElementById("newPost").classList.add("failed");
+            document.getElementById("newPost-time").textContent = "Transaction failed!";
+          }
+          else {
+            console.log(JSON.stringify(hello.result.data));
+            document.getElementById("newPost").classList.remove("blinking");
+            document.getElementById("newPost-id").innerHTML = `ID:(<a href="https://explorer.chainweb.com/mainnet/chain/17/height/` + JSON.stringify(hello.metaData.blockHeight) + `" target="_blank">` + JSON.stringify(hello.metaData.blockHeight) + `</a>)`;
+            let postTime =  new Date();
+            document.getElementById("newPost-time").textContent = postTime.toLocaleString("ja-JP");
+          }
+        } catch (e) {
+          console.log(e)
+        }
 }
 //minimum and maximum character count. User get's notified if outside of limits.
 const MaxMsgCount = 1024;
@@ -381,4 +430,15 @@ async function highlightDiv(id){
 </div>
 
 </header>
+<main>
+<div class="post hidden" id="newPost">
+  <div class="post-meta">
+    <div>
+      <span id="newPost-id"></span>
+    </div>
+    <span id="newPost-time"></span>
+  </div>
+  <div class="post-username"><span id="newPost-name"></span>:</div>
+  <div class="post-message"><span id="newPost-message"></span></div>
+</div>
 </html>
