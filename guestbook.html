@@ -314,7 +314,7 @@ const payGas = async () => {
       document.getElementById("newPost").classList.remove("hidden");
         document.getElementById("newPost").classList.add("blinking");
         document.getElementById("newPost-name").textContent = username;
-        document.getElementById("newPost-message").textContent = message;
+        document.getElementById("newPost-message").innerHTML = formatMessage(message);
         document.getElementById("newPost-id").textContent = "PENDING";
         document.getElementById("newPost-time").textContent = "Post submitted to the Kadena Blockchain, please wait";
         try {
