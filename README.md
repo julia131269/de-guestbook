@@ -1,4 +1,4 @@
-# de-guestbook V1.1
+# de-guestbook V1.2
 ### A guestbook/Imageboard clone written in PACT for the Kadena Blockchain
 
 First of all a shoutout to [github.com/Thanos420NoScope/Anon-Chat](https://github.com/Thanos420NoScope/Anon-Chat) that inspired this project. 
