@@ -69,3 +69,5 @@
 )
 ;(create-table history)
 ;(create-table last-id)
+(create-table history)
+(create-table last-id)
